@@ -12,7 +12,6 @@ export class App extends Component {
     page: 1,
     data: [],
   };
-
   handleSearch = searchText => {
     this.setState({ searchText, page: 1, data: [] });
   };
