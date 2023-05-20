@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import api from 'Services/getImages';
 import css from '../styles.module.css';
@@ -6,46 +6,45 @@ import ImageGalleryItem from '../ImageGalleryItem';
 import Button from '../Button/Button';
 import Loader from 'components/Loader/Loader';
 
-class ImageGallery extends Component {
-  state = {
-    isLoading: false,
-    error: null,
-  };
+const ImageGallery = ({
+  searchText,
+  getModalImage,
+  handleLoadMore,
+  data,
+  setDatas,
+  page,
+}) => {
+  const [isLoading, setIsLoadind] = useState(false);
+  const [error, setError] = useState(null);
 
-  componentDidUpdate(prevProps, prevState) {
-    const { searchText, page, setData } = this.props;
-
-    if (prevProps.searchText !== searchText || prevProps.page !== page) {
-      this.setState({ isLoading: true });
-      api
-        .getImages(this.props.searchText, page)
-        .then(data => setData(data.hits))
-        .catch(error => this.setState({ error }))
-        .finally(() => {
-          this.setState({ isLoading: false });
-        });
+  useEffect(() => {
+    if (searchText === '') {
+      return;
     }
-  }
+    setIsLoadind(true);
+    api
+      .getImages(searchText, page)
+      .then(data => setDatas(data.hits))
+      .catch(error => setError(error))
+      .finally(() => {
+        setIsLoadind(false);
+      });
+  }, [searchText, page, setDatas]);
 
-  render() {
-    const { isLoading, error } = this.state;
-    const { searchText, getModalImage, handleLoadMore, data } = this.props;
-
-    return (
-      <>
-        {isLoading && <Loader />}
-        {!searchText && (
-          <div className={css.text}>Let`s find images together!</div>
-        )}
-        {error && <h1>{error}</h1>}
-        <ul className={css.ImageGallery} onClick={getModalImage}>
-          <ImageGalleryItem data={data} />
-        </ul>
-        {data.length > 1 && <Button onClick={handleLoadMore}>Load More</Button>}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      {isLoading && <Loader />}
+      {!searchText && (
+        <div className={css.text}>Let`s find images together!</div>
+      )}
+      {error && <h1>{error}</h1>}
+      <ul className={css.ImageGallery} onClick={getModalImage}>
+        <ImageGalleryItem data={data} />
+      </ul>
+      {data.length > 1 && <Button onClick={handleLoadMore}>Load More</Button>}
+    </>
+  );
+};
 
 export default ImageGallery;
 

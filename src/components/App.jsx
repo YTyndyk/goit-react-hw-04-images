@@ -1,51 +1,52 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import css from './styles.module.css';
 import Modal from './Modal/Modal';
-export class App extends Component {
-  state = {
-    searchText: '',
-    image: '',
-    showModal: false,
-    perpage: 12,
-    page: 1,
-    data: [],
-  };
-  handleSearch = searchText => {
-    this.setState({ searchText, page: 1, data: [] });
+export const App = () => {
+  const [searchText, setSearchText] = useState('');
+  const [image, setImage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [perpage, setPerpage] = useState(12);
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState([]);
+
+  const handleSearch = searchText => {
+    setSearchText(searchText);
+    setPage(1);
+    setData([]);
   };
 
-  getModalImage = e => {
-    return this.setState({ image: e.target.id, showModal: true });
+  const getModalImage = e => {
+    setImage(e.target.id);
+    setShowModal(true);
   };
 
-  closeModal = () => {
-    return this.setState({ showModal: false });
-  };
-  setData = data => {
-    this.setState({ data: [...this.state.data, ...data] });
-  };
-  handleLoadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
+  const closeModal = () => {
+    setShowModal(false);
   };
 
-  render() {
-    const { perpage, searchText, showModal, image, data, page } = this.state;
-    return (
-      <div className={css.App}>
-        {showModal && <Modal image={image} closeModal={this.closeModal} />}
-        <Searchbar onSearch={this.handleSearch} />
-        <ImageGallery
-          page={page}
-          searchText={searchText}
-          perpage={perpage}
-          getModalImage={this.getModalImage}
-          data={data}
-          setData={this.setData}
-          handleLoadMore={this.handleLoadMore}
-        />
-      </div>
-    );
-  }
-}
+  const setDatas = ({ data }) => {
+    setData(prevdData => [...prevdData, ...data]);
+  };
+
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  return (
+    <div className={css.App}>
+      {showModal && <Modal image={image} closeModal={closeModal} />}
+      <Searchbar onSearch={handleSearch} />
+      <ImageGallery
+        page={page}
+        searchText={searchText}
+        perpage={perpage}
+        getModalImage={getModalImage}
+        data={data}
+        setData={setDatas}
+        handleLoadMore={handleLoadMore}
+      />
+    </div>
+  );
+};
