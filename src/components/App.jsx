@@ -8,14 +8,12 @@ export const App = () => {
   const [searchText, setSearchText] = useState('');
   const [image, setImage] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [perpage, setPerpage] = useState(12);
+  const [perpage] = useState(12);
   const [page, setPage] = useState(1);
-  const [data, setData] = useState([]);
 
   const handleSearch = searchText => {
     setSearchText(searchText);
     setPage(1);
-    setData([]);
   };
 
   const getModalImage = e => {
@@ -27,13 +25,10 @@ export const App = () => {
     setShowModal(false);
   };
 
-  const setDatas = newData => {
-    setData([...data, ...newData]);
+  const handleLoadMore = () => {
+    setPage(s => s + 1);
   };
 
-  const handleLoadMore = () => {
-    setPage(prevPage => prevPage + 1);
-  };
   return (
     <div className={css.App}>
       {showModal && <Modal image={image} closeModal={closeModal} />}
@@ -43,8 +38,6 @@ export const App = () => {
         searchText={searchText}
         perpage={perpage}
         getModalImage={getModalImage}
-        data={data}
-        setDatas={setDatas}
         handleLoadMore={handleLoadMore}
       />
     </div>
