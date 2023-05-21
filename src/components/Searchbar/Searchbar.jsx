@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Proptypes from 'prop-types';
 import { AiOutlineSearch } from 'react-icons/ai';
-import css from '../styles.module.css';
+import css from './Searchbar.module.css';
 
 const Searchbar = ({ onSearch }) => {
   const [name, setName] = useState('');

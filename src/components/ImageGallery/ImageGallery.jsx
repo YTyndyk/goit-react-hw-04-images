@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import api from 'Services/getImages';
-import css from '../styles.module.css';
-import ImageGalleryItem from '../ImageGalleryItem';
+import css from './ImageGallery.module.css';
+import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
 import Loader from 'components/Loader/Loader';
 
@@ -15,7 +15,6 @@ const ImageGallery = ({
   page,
 }) => {
   const [isLoading, setIsLoadind] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (searchText === '') {
@@ -25,11 +24,11 @@ const ImageGallery = ({
     api
       .getImages(searchText, page)
       .then(data => setDatas(data.hits))
-      .catch(error => setError(error))
+      .catch(error => console.log(error))
       .finally(() => {
         setIsLoadind(false);
       });
-  }, [searchText, page, setDatas]);
+  }, [searchText, page]);
 
   return (
     <>
@@ -37,7 +36,7 @@ const ImageGallery = ({
       {!searchText && (
         <div className={css.text}>Let`s find images together!</div>
       )}
-      {error && <h1>{error}</h1>}
+
       <ul className={css.ImageGallery} onClick={getModalImage}>
         <ImageGalleryItem data={data} />
       </ul>
@@ -55,5 +54,5 @@ ImageGallery.propTypes = {
   page: PropTypes.number.isRequired,
   perpage: PropTypes.number.isRequired,
   searchText: PropTypes.string.isRequired,
-  setData: PropTypes.func.isRequired,
+  setDatas: PropTypes.func.isRequired,
 };

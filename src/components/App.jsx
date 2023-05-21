@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import css from './styles.module.css';
+import css from './App.module.css';
 import Modal from './Modal/Modal';
+
 export const App = () => {
   const [searchText, setSearchText] = useState('');
   const [image, setImage] = useState('');
@@ -26,14 +27,13 @@ export const App = () => {
     setShowModal(false);
   };
 
-  const setDatas = ({ data }) => {
-    setData(prevdData => [...prevdData, ...data]);
+  const setDatas = newData => {
+    setData([...data, ...newData]);
   };
 
   const handleLoadMore = () => {
     setPage(prevPage => prevPage + 1);
   };
-
   return (
     <div className={css.App}>
       {showModal && <Modal image={image} closeModal={closeModal} />}
@@ -44,7 +44,7 @@ export const App = () => {
         perpage={perpage}
         getModalImage={getModalImage}
         data={data}
-        setData={setDatas}
+        setDatas={setDatas}
         handleLoadMore={handleLoadMore}
       />
     </div>

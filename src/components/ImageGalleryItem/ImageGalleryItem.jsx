@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import css from '../styles.module.css';
+import css from './ImageGalleryItem.module.css';
 
 const ImageGalleryItem = ({ data }) => {
   return data.map(obj => (
